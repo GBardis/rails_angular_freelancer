@@ -8,42 +8,34 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require("@angular/core");
+var core_1 = require('@angular/core');
+var Rx_1 = require('rxjs/Rx');
+var document_service_1 = require('./document.service');
 var DocumentsComponent = (function () {
-    function DocumentsComponent() {
-        this.pageTitle = "DocumentDashboard";
-        this.documents = [
-            {
-                title: "My First doc",
-                description: "hello doc",
-                file_url: "http://google.com",
-                update_at: '11/06/2013',
-                image_url: "https://www.spiderg.com/wp-content/uploads/2016/11/1-11.jpg"
-            },
-            {
-                title: "My Second doc",
-                description: "hello doc",
-                file_url: "http://google.com",
-                update_at: '11/06/2013',
-                image_url: "http://www.labourbeat.org/wp-content/uploads/2016/09/Freelancer-Fair-couple.jpg"
-            },
-            {
-                title: "My Third doc",
-                description: "hello doc",
-                file_url: "http://google.com",
-                update_at: '11/06/2013',
-                image_url: "https://www.policygenius.com/blog/library/uploads/2015/07/Freelancer-Insurance-Guide-Featured.png"
-            }
-        ];
+    function DocumentsComponent(documentService) {
+        this.documentService = documentService;
+        this.pageTitle = "Document Dashboard";
+        this.mode = "Observable";
     }
+    DocumentsComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        var timer = Rx_1.Observable.timer(0, 5000);
+        timer.subscribe(function () { return _this.getDocuments(); });
+    };
+    DocumentsComponent.prototype.getDocuments = function () {
+        var _this = this;
+        this.documentService.getDocuments()
+            .subscribe(function (documents) { return _this.documents = documents; }, function (error) { return _this.errorMessage = error; });
+    };
     DocumentsComponent = __decorate([
         core_1.Component({
             moduleId: module.id,
             selector: 'documents',
             templateUrl: 'documents.component.html',
-            styleUrls: ['ducuments.component.css']
+            /*styleUrls: ['documents.component.css'],*/
+            providers: [document_service_1.DocumentService]
         }), 
-        __metadata('design:paramtypes', [])
+        __metadata('design:paramtypes', [document_service_1.DocumentService])
     ], DocumentsComponent);
     return DocumentsComponent;
 }());
